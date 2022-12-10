@@ -6,31 +6,33 @@ import { Subject } from './subject.entity';
 
 @Injectable()
 export class SubjectsService {
-    constructor(
-        @InjectRepository(Subject)
-        private subjectsRepo: Repository<Subject>
-    ) { }
+  constructor(
+    @InjectRepository(Subject)
+    private subjectsRepo: Repository<Subject>,
+  ) {}
 
-    list() {
-        return this.subjectsRepo.find();
-    }
+  list() {
+    return this.subjectsRepo.find();
+  }
 
+  async getRandom() {
+    const query = this.subjectsRepo
+      .createQueryBuilder('subject')
+      .orderBy('RANDOM()')
+      .where('subject.isTweets = false')
+      .getOne();
 
+    return query;
+  }
 
-    async getRandom() {
-        const query = this.subjectsRepo.createQueryBuilder("subject").orderBy("RANDOM()").where("subject.isTweets = false").getOne()
+  async create(createSubDio: CreateSubjectDio) {
+    const subject = this.subjectsRepo.create(createSubDio);
+    return this.subjectsRepo.save(subject);
+  }
 
-        return query
-    }
-
-    async create(createSubDio: CreateSubjectDio) {
-        const subject = this.subjectsRepo.create(createSubDio)
-        return this.subjectsRepo.save(subject);
-    }
-
-    async changeTweeted(id: number) {
-        const sub = await this.subjectsRepo.findOneBy({ id })
-        const update = await this.subjectsRepo.update(sub, { isTweets: true })
-        return update
-    }
+  async changeTweeted(id: number) {
+    const sub = await this.subjectsRepo.findOneBy({ id });
+    const update = await this.subjectsRepo.update(sub, { isTweets: true });
+    return update;
+  }
 }

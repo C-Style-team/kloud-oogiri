@@ -10,10 +10,16 @@ import { SubjectsModule } from './subjects/subjects.module';
 import { TwitterModule } from './twitter/twitter.module';
 
 @Module({
-    imports: [SubjectsModule, HealthModule, EnvironmentsModule, TypeOrmModule.forRoot(AppDataSource.options), TwitterModule],
-    controllers: [AppController],
-    providers: [AppService],
+  imports: [
+    SubjectsModule,
+    HealthModule,
+    EnvironmentsModule,
+    TypeOrmModule.forRoot(AppDataSource.options),
+    TwitterModule,
+  ],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {
-    constructor(private dataSource: DataSource) { }
+  constructor(private dataSource: DataSource) {}
 }

@@ -5,8 +5,8 @@ import { SubjectsModule } from 'src/subjects/subjects.module';
 import { EnvironmentsModule } from 'src/environments/environments.module';
 
 @Module({
-    providers: [TwitterService],
-    controllers: [TwitterController],
-    imports: [SubjectsModule, EnvironmentsModule]
+  providers: [TwitterService],
+  controllers: [TwitterController],
+  imports: [SubjectsModule, EnvironmentsModule],
 })
-export class TwitterModule { }
+export class TwitterModule {}

@@ -30,6 +30,6 @@ export class TwitterService {
         `
         const tweet = await this.twitterClient.v2.tweet(fullText)
         await this.subjectsService.changeTweeted(sub.id)
-        return tweet.data
+        return this.twitterClient.v2.singleTweet(tweet.data.id)
     }
 }

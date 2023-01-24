@@ -11,17 +11,17 @@ import { TwitterModule } from './twitter/twitter.module';
 import { AuthModule } from './auth/auth.module';
 
 @Module({
-      imports: [
-            SubjectsModule,
-            HealthModule,
-            EnvironmentsModule,
-            TypeOrmModule.forRoot(AppDataSource.options),
-            TwitterModule,
-            AuthModule,
-      ],
-      controllers: [AppController],
-      providers: [AppService],
+  imports: [
+    SubjectsModule,
+    HealthModule,
+    EnvironmentsModule,
+    TypeOrmModule.forRoot(AppDataSource.options),
+    TwitterModule,
+    AuthModule,
+  ],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {
-      constructor(private dataSource: DataSource)  { }
+  constructor(private dataSource: DataSource) {}
 }

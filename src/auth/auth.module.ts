@@ -4,7 +4,7 @@ import { HeaderApiKeyStrategy } from './apiKey.strategy';
 import { EnvironmentsModule } from 'src/environments/environments.module';
 
 @Module({
-    imports: [PassportModule, EnvironmentsModule],
-    providers: [HeaderApiKeyStrategy],
+  imports: [PassportModule, EnvironmentsModule],
+  providers: [HeaderApiKeyStrategy],
 })
-export class AuthModule { }
+export class AuthModule {}

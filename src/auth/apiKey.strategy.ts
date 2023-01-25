@@ -19,7 +19,6 @@ export class HeaderApiKeyStrategy extends PassportStrategy(
     done: (error: Error, isData: boolean) => { any },
   ) => {
     if (this.envService.apiKey === apiKey) {
-      console.log(apiKey);
       done(null, true);
     }
     done(new UnauthorizedException(), null);

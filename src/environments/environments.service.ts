@@ -13,6 +13,10 @@ export class EnvironmentsService {
     return str != null ? str : '';
   };
 
+  get notionApiKey() {
+    return this.returnEmptyString(this.configService.get('NOTION_API_KEY'));
+  }
+
   get apiKey() {
     return this.returnEmptyString(this.configService.get('API_KEY'));
   }

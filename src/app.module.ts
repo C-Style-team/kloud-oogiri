@@ -9,6 +9,7 @@ import { HealthModule } from './health/health.module';
 import { SubjectsModule } from './subjects/subjects.module';
 import { TwitterModule } from './twitter/twitter.module';
 import { AuthModule } from './auth/auth.module';
+import { NotionsModule } from './notions/notions.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { AuthModule } from './auth/auth.module';
     TypeOrmModule.forRoot(AppDataSource.options),
     TwitterModule,
     AuthModule,
+    NotionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

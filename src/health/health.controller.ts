@@ -4,6 +4,7 @@ import {
   HealthCheckService,
   TypeOrmHealthIndicator,
 } from '@nestjs/terminus';
+import { response } from 'express';
 
 @Controller('health')
 export class HealthController {
@@ -15,8 +16,6 @@ export class HealthController {
   @Get()
   @HealthCheck()
   check() {
-    return this.health.check([
-      () => this.db.pingCheck('database', { timeout: 300 }),
-    ]);
+    return response.status(200);
   }
 }

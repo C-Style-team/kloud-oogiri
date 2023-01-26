@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppDataSource } from 'ormconfig';
-import { DataSource } from 'typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { EnvironmentsModule } from './environments/environments.module';
@@ -16,7 +15,6 @@ import { NotionsModule } from './notions/notions.module';
     SubjectsModule,
     HealthModule,
     EnvironmentsModule,
-    TypeOrmModule.forRoot(AppDataSource.options),
     TwitterModule,
     AuthModule,
     NotionsModule,
@@ -24,6 +22,4 @@ import { NotionsModule } from './notions/notions.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {
-  constructor(private dataSource: DataSource) {}
-}
+export class AppModule {}

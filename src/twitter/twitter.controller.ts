@@ -1,4 +1,10 @@
-import { Controller, Put, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  HttpException,
+  HttpStatus,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { TwitterService } from './twitter.service';
 
@@ -7,8 +13,18 @@ export class TwitterController {
   constructor(private twitterService: TwitterService) {}
   @Put()
   @UseGuards(AuthGuard('api-key'))
-  tweet() {
-    return this.twitterService.tweet();
+  async tweet() {
+    const tweet = await this.twitterService.tweet();
+    if (tweet == null) {
+      throw new HttpException(
+        {
+          status: HttpStatus.INTERNAL_SERVER_ERROR,
+          error: 'Internal server error.',
+        },
+        500,
+      );
+    }
+    return tweet;
   }
 
   @Put('/test')

@@ -21,6 +21,20 @@ export class NotionsService {
     return database.results;
   }
 
+  async changeStatus(pageId: string, status: string) {
+    const page = await this.notion.pages.update({
+      page_id: pageId,
+      properties: {
+        Status: {
+          select: {
+            id: status,
+          },
+        },
+      },
+    });
+    return page;
+  }
+
   async getToday() {
     const database = await this.notion.databases.query({
       //TODO use env

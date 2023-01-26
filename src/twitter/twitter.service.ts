@@ -1,4 +1,4 @@
-import { HttpCode, Injectable } from '@nestjs/common';
+import { HttpCode, Injectable, Response } from '@nestjs/common';
 import { response } from 'express';
 import { EnvironmentsService } from 'src/environments/environments.service';
 import { SubjectsService } from 'src/subjects/subjects.service';
@@ -35,28 +35,41 @@ export class TwitterService {
 
   async tweet() {
     const subs = await this.subjectsService.getToday();
-    subs.map(async (sub) => {
-      const media = await this.uploadImage(
-        (() => {
-          if (sub.properties['アイキャッチ'].type == 'files') {
-            if (sub.properties['アイキャッチ'].files[0].type == 'file') {
-              return sub.properties['アイキャッチ'].files[0].file.url;
+    try {
+      subs.map(async (sub) => {
+        const media = await this.uploadImage(
+          (() => {
+            if (sub.properties['アイキャッチ'].type == 'files') {
+              if (
+                sub.properties['アイキャッチ'].files[0] &&
+                sub.properties['アイキャッチ'].files[0].type == 'file'
+              ) {
+                return sub.properties['アイキャッチ'].files[0].file.url;
+              }
+            }
+          })(),
+        );
+        const tag: string = (() => {
+          if (sub.properties['専用タグ'].type === 'rich_text') {
+            if (sub.properties['専用タグ'].rich_text[0].type === 'text') {
+              return sub.properties['専用タグ'].rich_text[0].text.content;
             }
           }
-        })(),
-      );
-      const fullText = `引用リツイートでご回答ください😊
-#Kloud #Kloud大喜利 #高専 `;
-      if (media && sub) {
-        this.twitterClient.v2.tweet(fullText, {
-          media: { media_ids: [media] },
-        });
-        //TODO
-        //await this.subjectsService.changeTweeted(sub.id);
-      } else {
-        HttpCode(500);
-      }
-    });
-    return response.status(200);
+        })();
+        //TODO 絵文字ランダム
+        const fullText = `引用リツイートでご回答ください😊
+#Kloud #Kloud大喜利 #高専 ${tag}`;
+        if (media && sub) {
+          this.twitterClient.v2.tweet(fullText, {
+            media: { media_ids: [media] },
+          });
+          //TODO
+          await this.subjectsService.updateStatusToAggregating(sub);
+        }
+      });
+      return response.status(200);
+    } catch (e) {
+      return null;
+    }
   }
 }

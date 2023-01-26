@@ -1,4 +1,5 @@
 import { HttpCode, Injectable, Response } from '@nestjs/common';
+import { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints';
 import { response } from 'express';
 import { EnvironmentsService } from 'src/environments/environments.service';
 import { SubjectsService } from 'src/subjects/subjects.service';
@@ -29,49 +30,55 @@ export class TwitterService {
     return media;
   }
 
-  async tweet() {
-    const subs = await this.subjectsService.getToday();
-    try {
-      subs.map(async (sub) => {
-        const media = await this.uploadImage(
-          (() => {
-            if (sub.properties['アイキャッチ'].type == 'files') {
-              if (
-                sub.properties['アイキャッチ'].files[0] &&
-                sub.properties['アイキャッチ'].files[0].type == 'file'
-              ) {
-                return sub.properties['アイキャッチ'].files[0].file.url;
-              } else {
-                throw new Error();
-              }
-            }
-          })(),
-        );
-        const tag: string = (() => {
-          if (sub.properties['専用タグ'].type === 'rich_text') {
+  async tweet(subs: PageObjectResponse[]) {
+    subs.map(async (sub) => {
+      const media = await this.uploadImage(
+        (() => {
+          if (sub.properties['アイキャッチ'].type == 'files') {
             if (
-              sub.properties['専用タグ'].rich_text[0] &&
-              sub.properties['専用タグ'].rich_text[0].type === 'text'
+              sub.properties['アイキャッチ'].files[0] &&
+              sub.properties['アイキャッチ'].files[0].type == 'file'
             ) {
-              return sub.properties['専用タグ'].rich_text[0].text.content;
+              return sub.properties['アイキャッチ'].files[0].file.url;
             } else {
               throw new Error();
             }
           }
-        })();
-        //TODO 絵文字ランダム
-        const fullText = `引用リツイートでご回答ください😊
-#Kloud #Kloud大喜利 #高専 ${tag}`;
-        if (media && sub) {
-          this.twitterClient.v2.tweet(fullText, {
-            media: { media_ids: [media] },
-          });
-          //TODO
-          await this.subjectsService.updateStatusToAggregating(sub);
+        })(),
+      );
+      const tag: string = (() => {
+        if (sub.properties['専用タグ'].type === 'rich_text') {
+          if (
+            sub.properties['専用タグ'].rich_text[0] &&
+            sub.properties['専用タグ'].rich_text[0].type === 'text'
+          ) {
+            return sub.properties['専用タグ'].rich_text[0].text.content;
+          } else {
+            throw new Error();
+          }
         }
-      });
-      return response.status(200);
+      })();
+      //TODO 絵文字ランダム
+      const fullText = `引用リツイートでご回答ください😊
+#Kloud #Kloud大喜利 #高専 ${tag}`;
+      if (media && sub) {
+        this.twitterClient.v2.tweet(fullText, {
+          media: { media_ids: [media] },
+        });
+        //TODO
+        await this.subjectsService.updateStatusToAggregating(sub);
+      } else {
+        throw new Error();
+      }
+    });
+  }
+
+  async sending() {
+    const subs = await this.subjectsService.getToday();
+    try {
+      return await this.tweet(subs);
     } catch (e) {
+      console.log('a');
       return null;
     }
   }

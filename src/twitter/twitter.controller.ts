@@ -14,9 +14,9 @@ export class TwitterController {
   @Put()
   @UseGuards(AuthGuard('api-key'))
   async tweet() {
-    const tweet = await this.twitterService.tweet();
+    const tweet = await this.twitterService.sending();
     if (tweet == null) {
-      throw new HttpException(
+      return new HttpException(
         {
           status: HttpStatus.INTERNAL_SERVER_ERROR,
           error: 'Internal server error.',

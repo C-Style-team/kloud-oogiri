@@ -2,11 +2,7 @@ import { HttpCode, Injectable, Response } from '@nestjs/common';
 import { response } from 'express';
 import { EnvironmentsService } from 'src/environments/environments.service';
 import { SubjectsService } from 'src/subjects/subjects.service';
-import {
-  EUploadMimeType,
-  TweetV2PostTweetResult,
-  TwitterApi,
-} from 'twitter-api-v2';
+import { EUploadMimeType, TwitterApi } from 'twitter-api-v2';
 
 @Injectable()
 export class TwitterService {
@@ -45,14 +41,21 @@ export class TwitterService {
                 sub.properties['アイキャッチ'].files[0].type == 'file'
               ) {
                 return sub.properties['アイキャッチ'].files[0].file.url;
+              } else {
+                throw new Error();
               }
             }
           })(),
         );
         const tag: string = (() => {
           if (sub.properties['専用タグ'].type === 'rich_text') {
-            if (sub.properties['専用タグ'].rich_text[0].type === 'text') {
+            if (
+              sub.properties['専用タグ'].rich_text[0] &&
+              sub.properties['専用タグ'].rich_text[0].type === 'text'
+            ) {
               return sub.properties['専用タグ'].rich_text[0].text.content;
+            } else {
+              throw new Error();
             }
           }
         })();

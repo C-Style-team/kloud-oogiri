@@ -50,7 +50,9 @@ export class NotionsService {
           i.properties['投稿日'].date.start != null
         ) {
           return (
-            dayjs(i.properties['投稿日'].date.start).date() === dayjs().date()
+            dayjs(i.properties['投稿日'].date.start).date() ===
+              dayjs().date() &&
+            dayjs(i.properties['投稿日'].date.start).month() === dayjs().month()
           );
         }
       }

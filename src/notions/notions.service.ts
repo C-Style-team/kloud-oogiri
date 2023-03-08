@@ -60,7 +60,6 @@ export class NotionsService {
             dayjs(i.properties['投稿日'].date.start).month() === dayjs().month()
           );
         } else {
-          console.log(i);
           return false;
         }
       }

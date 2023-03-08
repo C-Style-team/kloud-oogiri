@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppDataSource } from 'ormconfig';
 import { AppController } from './app.controller';
@@ -9,6 +9,7 @@ import { SubjectsModule } from './subjects/subjects.module';
 import { TwitterModule } from './twitter/twitter.module';
 import { AuthModule } from './auth/auth.module';
 import { NotionsModule } from './notions/notions.module';
+import { LoggerMiddleware } from './app.middleware';
 
 @Module({
   imports: [
@@ -22,4 +23,8 @@ import { NotionsModule } from './notions/notions.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer): void {
+    consumer.apply(LoggerMiddleware).forRoutes('');
+  }
+}

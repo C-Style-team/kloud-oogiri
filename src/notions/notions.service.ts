@@ -44,16 +44,24 @@ export class NotionsService {
     const results: PageObjectResponse[] = (
       database.results.filter((i) => 'properties' in i) as PageObjectResponse[]
     ).filter((i) => {
-      if (i.properties['投稿日'].type === 'date') {
+      if (
+        i.properties['投稿日'].type === 'date' &&
+        i.properties['Status'].type === 'select'
+      ) {
         if (
           i.properties['投稿日'].date != null &&
-          i.properties['投稿日'].date.start != null
+          i.properties['投稿日'].date.start != null &&
+          i.properties['Status'].select != null &&
+          i.properties['Status'].select.name === 'アイキャッチ作った'
         ) {
           return (
             dayjs(i.properties['投稿日'].date.start).date() ===
               dayjs().date() &&
             dayjs(i.properties['投稿日'].date.start).month() === dayjs().month()
           );
+        } else {
+          console.log(i);
+          return false;
         }
       }
     });

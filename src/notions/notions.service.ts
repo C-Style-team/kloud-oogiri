@@ -52,7 +52,7 @@ export class NotionsService {
           i.properties['投稿日'].date != null &&
           i.properties['投稿日'].date.start != null &&
           i.properties['Status'].select != null &&
-          i.properties['Status'].select.name === 'アイキャッチ作った'
+          i.properties['Status'].select.name != '集計中'
         ) {
           return (
             dayjs(i.properties['投稿日'].date.start).date() ===
